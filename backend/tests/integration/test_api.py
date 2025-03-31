@@ -1,4 +1,3 @@
-import pytest
 from fastapi.testclient import TestClient
 from mr_lim_card_game.main import app
 
@@ -27,8 +26,7 @@ def test_add_player():
     session_id = response.json()["session_id"]
 
     # Add a player to the session
-    response = client.post(
-        f"/game/add-player", json={"session_id": session_id, "name": "Player1"})
+    response = client.post("/game/add-player", json={"session_id": session_id, "name": "Player1"})
     assert response.status_code == 200
     data = response.json()
     assert "player" in data

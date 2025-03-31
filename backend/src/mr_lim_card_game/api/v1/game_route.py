@@ -1,6 +1,7 @@
 """
 API Endpoints game management
 """
+
 from fastapi import APIRouter, HTTPException, Depends
 from mr_lim_card_game.services.game_service import GameService
 from mr_lim_card_game.dependencies import get_game_service
@@ -24,8 +25,7 @@ async def add_player(payload: PlayerAdd, game_service: GameService = Depends(get
     session_id = payload.session_id
     player_name = payload.name
     if not session_id or not player_name:
-        raise HTTPException(
-            status_code=400, detail="session_id and player_name are required")
+        raise HTTPException(status_code=400, detail="session_id and player_name are required")
     session = await game_service.get_session_info(session_id)
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
@@ -42,14 +42,14 @@ async def get_session_info(session_id: str, game_service: GameService = Depends(
     return {"session_info": session}
 
 
-@router.get('/list-sessions')
+@router.get("/list-sessions")
 async def list_sessions(game_service: GameService = Depends(get_game_service)):
     """List all active game sessions"""
     sessions = await game_service.list_sessions()
     return {"sessions": sessions}
 
 
-@router.delete('/delete-session/{session_id}')
+@router.delete("/delete-session/{session_id}")
 async def delete_session(session_id: str, game_service: GameService = Depends(get_game_service)):
     """Delete a game session"""
     session = await game_service.get_session_info(session_id)

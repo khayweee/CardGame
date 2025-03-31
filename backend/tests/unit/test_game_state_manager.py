@@ -20,8 +20,7 @@ def test_remove_player():
     session_id = generate_session_id()
     player1 = Player(id="1", name="Player1")
     player2 = Player(id="2", name="Player2")
-    game_state = GameState(session_id=session_id, players=[
-                           player1, player2], state={})
+    game_state = GameState(session_id=session_id, players=[player1, player2], state={})
     manager = GameStateManager(game_state)
 
     manager.remove_player("1")

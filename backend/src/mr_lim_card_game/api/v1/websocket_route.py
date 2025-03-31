@@ -6,7 +6,12 @@ router = APIRouter()
 
 
 @router.websocket("/ws/{session_id}/{player_id}")
-async def websocket_endpoint(websocket: WebSocket, session_id: str, player_id: str, game_service: GameService = Depends(get_game_service)):
+async def websocket_endpoint(
+    websocket: WebSocket,
+    session_id: str,
+    player_id: str,
+    game_service: GameService = Depends(get_game_service),
+):
     await game_service.connect(websocket, session_id, player_id)
     try:
         while True:

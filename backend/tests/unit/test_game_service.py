@@ -1,6 +1,6 @@
 import pytest
 from mr_lim_card_game.services.game_service import GameService
-from mr_lim_card_game.models.game import GameState, Player
+from mr_lim_card_game.models.game import GameState
 
 
 @pytest.mark.asyncio
@@ -77,7 +77,7 @@ async def test_update_game_state():
 
 @pytest.mark.asyncio
 async def test_get_session_info():
-    """ 
+    """
     Test the `get_session_info` method of the `GameService` class.
 
     This test performs the following checks:

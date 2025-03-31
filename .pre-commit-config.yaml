@@ -1,15 +1,15 @@
 repos:
   - repo: local
     hooks:
-      - id: lint-backend
-        name: Lint Backend
-        entry: make lint_backend
-        language: system
-        pass_filenames: false
-
       - id: format-backend
         name: Format Backend
         entry: make format_backend
+        language: system
+        pass_filenames: false
+
+      - id: lint-backend
+        name: Lint Backend
+        entry: make lint_backend
         language: system
         pass_filenames: false
 
