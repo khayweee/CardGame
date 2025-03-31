@@ -4,6 +4,8 @@ from mr_lim_card_game.models.game import GameState, Player
 from .game_state_manager import GameStateManager
 from mr_lim_card_game.utils.id_generator import generate_session_id
 import asyncio
+from fastapi import WebSocket
+from .connection_manager import ConnectionManager
 
 
 class SessionManager:
@@ -47,6 +49,7 @@ class GameService:
     def __init__(self):
         """Initialize the game service"""
         self.sessions: SessionManager = SessionManager()
+        self.connection_manager = ConnectionManager()  # Use ConnectionManager
 
     async def create_session(self) -> str:
         """Create a new game session and return its ID if successfully added"""
@@ -95,3 +98,13 @@ class GameService:
         if not session:
             raise ValueError(f"Session not found: {session_id}")
         await self.sessions.remove_session(session_id)
+
+    async def connect(self, websocket: WebSocket, session_id: str, player_id: str):
+        await websocket.accept()
+        await self.connection_manager.add_connection(session_id, player_id, websocket)
+
+    async def disconnect(self, websocket: WebSocket, session_id: str, player_id: str):
+        await self.connection_manager.remove_connection(session_id, player_id)
+
+    async def broadcast(self, session_id: str, message: str):
+        await self.connection_manager.broadcast(session_id, message)

@@ -10,8 +10,8 @@ from mr_lim_card_game.models.game_route import PlayerAdd
 router = APIRouter()
 
 
-@router.post("/create-session")
-async def create_session(game_service: GameService = Depends(get_game_service)):
+@router.post("/create-game", name="create_game")
+async def create_game(game_service: GameService = Depends(get_game_service)):
     """Create a new game session"""
     session_id = await game_service.create_session()
     if not session_id:
@@ -19,7 +19,7 @@ async def create_session(game_service: GameService = Depends(get_game_service)):
     return {"session_id": session_id}
 
 
-@router.post("/add-player")
+@router.post("/add-player", name="add_player")
 async def add_player(payload: PlayerAdd, game_service: GameService = Depends(get_game_service)):
     """Add a player to a game session"""
     session_id = payload.session_id
