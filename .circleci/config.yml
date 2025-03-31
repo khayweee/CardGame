@@ -7,7 +7,7 @@ jobs:
   test-python:
     # Install dependencies and run tests
     docker:
-      - image: cimg/python:3.13.2-node
+      - image: cimg/python:3.13.2
     working_directory: ~/project/backend
     steps:
       - checkout:
@@ -22,10 +22,19 @@ jobs:
           name: Install dependencies
           command: poetry install
       - run:
+          name: Run linting
+          command: poetry run flake8 src tests
+      - run:
+          name: Run formatting check
+          command: poetry run black --check src tests
+      - run:
           name: Run tests
-          command: poetry run pytest --junitxml=junit.xml
+          command: poetry run pytest --junitxml=junit.xml || ((($? == 5)) && echo 'Did not find any tests to run.')
+      - run:
+          name: Debug Check for junit.xml
+          command: ls -lah
       - store_test_results:
-          path: junit.xml
+          path: ~/project/backend/junit.xml
   deploy:
     # This is an example deploy job, not actually used by the workflow
     docker:

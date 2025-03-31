@@ -1,6 +1,7 @@
 """
 API Endpoints game management
 """
+
 from fastapi import APIRouter, HTTPException
 from ...services.game_service import game_service
 
