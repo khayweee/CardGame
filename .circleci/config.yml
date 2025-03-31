@@ -7,16 +7,23 @@ jobs:
   test-python:
     # Install dependencies and run tests
     docker:
-      - image: cimg/python:3.8-node
+      - image: cimg/python:3.13.2-node
     working_directory: ~/project/backend
     steps:
       - checkout:
           path: ~/project
-      - python/install-packages:
-          pkg-manager: poetry
+      - run:
+          name: check dir
+          command: pwd && ls -lah
+      - run:
+          name: Install Poetry
+          command: curl -sSL https://install.python-poetry.org | python3 - --version 2.1.2
+      - run:
+          name: Install dependencies
+          command: poetry install
       - run:
           name: Run tests
-          command: poetry run pytest --junitxml=junit.xml || ((($? == 5)) && echo 'Did not find any tests to run.')
+          command: poetry run pytest --junitxml=junit.xml
       - store_test_results:
           path: junit.xml
   deploy:
@@ -27,7 +34,7 @@ jobs:
       # Replace this with steps to deploy to users
       - run:
           name: deploy
-          command: '#e.g. ./deploy.sh'
+          command: "#e.g. ./deploy.sh"
 workflows:
   build-and-test:
     jobs:

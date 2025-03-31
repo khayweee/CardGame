@@ -43,3 +43,13 @@ mr_lim_card_game/
 ├── .gitignore                   # Git ignore file
 ├── README.md                    # Project-level README
 ```
+
+## Project Setup
+
+Installing ciricleci cli
+
+```bash
+curl -fLSs https://circle.ci/cli -o circleci-cli.sh
+chmod +x circleci-cli.sh
+sudo ./circleci-cli.sh
+```
