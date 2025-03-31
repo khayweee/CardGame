@@ -1,4 +1,4 @@
-# Card Game
+# Mr. Lim Card Game
 
 A simple multi-player card game
 
@@ -46,10 +46,26 @@ mr_lim_card_game/
 
 ## Project Setup
 
-Installing ciricleci cli
+### Project uses circleci for CI-CD
+
+Install ciricleci cli to test workflow locally
 
 ```bash
 curl -fLSs https://circle.ci/cli -o circleci-cli.sh
 chmod +x circleci-cli.sh
 sudo ./circleci-cli.sh
+```
+
+Test circleci workflow locally
+
+```bash
+make circleci_local
+```
+
+### Project uses pre-commit hook
+
+Verify pre-commit before pushing
+
+```bash
+make pre_commit_run_backend
 ```

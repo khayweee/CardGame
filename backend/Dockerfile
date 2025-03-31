@@ -13,6 +13,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN curl -sSL https://install.python-poetry.org | python3 - && \
     ln -s /root/.local/bin/poetry /usr/local/bin/poetry
 
+# Set the PYTHONPATH environment variable
+ENV PYTHONPATH=/app/src
+
 # Copy the application code
 COPY src /app/src
 

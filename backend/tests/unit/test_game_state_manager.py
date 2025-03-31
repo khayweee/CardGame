@@ -1,10 +1,12 @@
 from uuid import uuid4
 from src.mr_lim_card_game.models.game import GameState, Player
 from src.mr_lim_card_game.services.game_state_manager import GameStateManager
+from src.mr_lim_card_game.utils.id_generator import generate_session_id
 
 
 def test_add_player():
-    game_state = GameState(session_id="test_session", players=[], state={})
+    session_id = generate_session_id()
+    game_state = GameState(session_id=session_id, players=[], state={})
     manager = GameStateManager(game_state)
     player = Player(id=str(uuid4()), name="Player1")
 
@@ -15,9 +17,11 @@ def test_add_player():
 
 
 def test_remove_player():
+    session_id = generate_session_id()
     player1 = Player(id="1", name="Player1")
     player2 = Player(id="2", name="Player2")
-    game_state = GameState(session_id="test_session", players=[player1, player2], state={})
+    game_state = GameState(session_id=session_id, players=[
+                           player1, player2], state={})
     manager = GameStateManager(game_state)
 
     manager.remove_player("1")
@@ -27,7 +31,8 @@ def test_remove_player():
 
 
 def test_update_state():
-    game_state = GameState(session_id="test_session", players=[], state={})
+    session_id = generate_session_id()
+    game_state = GameState(session_id=session_id, players=[], state={})
     manager = GameStateManager(game_state)
 
     manager.update_state("key", "value")
@@ -36,8 +41,9 @@ def test_update_state():
 
 
 def test_get_player():
+    session_id = generate_session_id()
     player = Player(id="1", name="Player1")
-    game_state = GameState(session_id="test_session", players=[player], state={})
+    game_state = GameState(session_id=session_id, players=[player], state={})
     manager = GameStateManager(game_state)
 
     retrieved_player = manager.get_player("1")

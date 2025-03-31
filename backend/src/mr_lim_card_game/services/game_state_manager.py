@@ -5,7 +5,7 @@ Controller for GameState
 - GameStateManager: Manages the game state and player interactions
 """
 
-from ..models.game import GameState, Player
+from mr_lim_card_game.models.game import GameState, Player
 from typing import Optional
 
 
