@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation"; // Updated import
+import { useRouter } from "next/navigation";
 
 const LandingPage = () => {
     const [name, setName] = useState("");
@@ -21,7 +21,8 @@ const LandingPage = () => {
         const createPlayerData = await createPlayerResponse.json();
         console.log(createPlayerData);
 
-        router.push(`/game/${data.session_id}/${createPlayerData.player.id}`); // Updated route
+        // Pass the token to the next page
+        router.push(`/game/${data.session_id}/${createPlayerData.player.id}?token=${encodeURIComponent(createPlayerData.token)}`);
     };
 
     const handleJoinGame = async () => {
@@ -32,7 +33,9 @@ const LandingPage = () => {
         });
         const createPlayerData = await createPlayerResponse.json();
         console.log(createPlayerData);
-        router.push(`/game/${sessionId}/${createPlayerData.player.id}`); // Updated route
+
+        // Pass the token to the next page
+        router.push(`/game/${sessionId}/${createPlayerData.player.id}?token=${encodeURIComponent(createPlayerData.token)}`);
     };
 
     return (
@@ -60,6 +63,6 @@ const LandingPage = () => {
             </div>
         </div>
     );
-}
+};
 
 export default LandingPage;

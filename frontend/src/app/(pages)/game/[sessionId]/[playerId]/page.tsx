@@ -1,81 +1,74 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
+import Chat from "@/components/Chat";
+import { ChatMessage } from "@/models/ChatMessage";
+import { jwtDecode } from "jwt-decode"; // Import jwt-decode library
+
+interface DecodedToken {
+    player_id: string;
+    name: string;
+    exp: number;
+    iat: number;
+}
 
 const GamePage = () => {
     const params = useParams();
-    const sessionId = params?.sessionId; // Extract sessionId from the route
-    const playerId = params?.playerId; // Extract playerId from the route
-    const [messages, setMessages] = useState<string[]>([]);
-    const [message, setMessage] = useState("");
+    const searchParams = useSearchParams();
+    const sessionId = params?.sessionId;
+    const playerId = (params?.playerId as string) || "";
+    const token = searchParams.get("token") as string; // Extract the token from query parameters
+    const [playerName, setPlayerName] = useState("Unknown Player"); // Initialize playerName state
+    const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [socket, setSocket] = useState<WebSocket | null>(null);
 
     useEffect(() => {
-        if (sessionId && playerId) {
-            console.log("Session ID:", sessionId, "Player ID:", playerId);
-            const token = "expected_token"; // Replace with the actual token logic if dynamic
-
-            const ws = new WebSocket(`ws://localhost:8000/ws/${sessionId}/${playerId}?token=${token}`);
-            console.log("WebSocket URL:", ws.url);
-            ws.onopen = () => {
-                console.log("WebSocket connection established.");
-                setSocket(ws);
-            };
-            ws.onmessage = (event) => {
-                console.log("Received message:", event.data);
-                setMessages((prev) => [...prev, event.data]);
-            };
-            ws.onerror = (error) => {
-                console.error("WebSocket error:", error);
-            };
-            ws.onclose = () => {
-                console.log("WebSocket connection closed.");
-                setSocket(null);
-            };
-
-            return () => {
-                console.log("Cleaning up WebSocket connection.");
-                ws.close();
-            };
+        if (token) {
+            try {
+                const decoded = jwtDecode<DecodedToken>(token); // Decode the token
+                setPlayerName(decoded.name); // Extract and set the player's name
+            } catch (error) {
+                console.error("Failed to decode token:", error);
+            }
         }
-    }, [sessionId, playerId]);
+    }, [token]);
 
-    const sendMessage = () => {
+    useEffect(() => {
+        if (sessionId && playerId && token) {
+            const ws = new WebSocket(`ws://localhost:8000/ws/${sessionId}?token=${token}`);
+            ws.onopen = () => setSocket(ws);
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                setMessages((prev) => [...prev, data]);
+            };
+            ws.onerror = (error) => console.error("WebSocket error:", error);
+            ws.onclose = () => setSocket(null);
+
+            return () => ws.close();
+        }
+    }, [sessionId, playerId, token]);
+
+    const sendMessage = (message: string) => {
         if (socket && message.trim()) {
-            socket.send(message);
-            setMessage("");
-        } else {
-            console.log("Message is empty or socket is not connected.");
+            const chatMessage: ChatMessage = {
+                playerId,
+                name: playerName,
+                message,
+            };
+            socket.send(JSON.stringify(chatMessage));
         }
     };
 
     return (
         <div className="game-page">
+            <Chat
+                messages={messages}
+                onSendMessage={sendMessage}
+                isConnected={!!socket}
+            />
             <h1>Game Session: {sessionId}</h1>
             <h2>Player ID: {playerId}</h2>
-            <div className="chat-box">
-                <h2>Chat</h2>
-                <div className="messages">
-                    {messages.map((msg, index) => (
-                        <p key={index}>{msg}</p>
-                    ))}
-                </div>
-                <form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        sendMessage();
-                    }}
-                >
-                    <input
-                        type="text"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                    />
-                    <button type="submit" disabled={!socket || !message.trim()}>
-                        Send
-                    </button>
-                </form>
-            </div>
+            <h3>Player Name: {playerName}</h3>
             <div className="game-interface">
                 <h2>Game Interface</h2>
                 {/* Add game-specific UI here */}
