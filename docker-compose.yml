@@ -1,14 +1,26 @@
 services:
-  mr_lim_card_game:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8000:443"
     environment:
       - ENV=production
       - LOGGER_CONFIG_PATH=config/logger.ini
-    command: poetry run uvicorn mr_lim_card_game.main:app --host 0.0.0.0 --port 8000
+    command:
+      - poetry
+      - run
+      - uvicorn
+      - mr_lim_card_game.main:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "443"
+      - --ssl-certfile
+      - src/certs/cert.pem
+      - --ssl-keyfile
+      - src/certs/key.pem
 
   frontend:
     build:

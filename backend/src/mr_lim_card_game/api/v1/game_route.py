@@ -6,6 +6,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from mr_lim_card_game.services.game_service import GameService
 from mr_lim_card_game.dependencies import get_game_service
 from mr_lim_card_game.models.game_route import PlayerAdd
+from mr_lim_card_game.utils.token_utils import generate_token
 
 router = APIRouter()
 
@@ -29,8 +30,14 @@ async def add_player(payload: PlayerAdd, game_service: GameService = Depends(get
     session = await game_service.get_session_info(session_id)
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
+
+    # Add player to the session
     player = await game_service.add_player(session_id, player_name)
-    return {"player": player}
+
+    # Generate JWT token for the player
+    token = generate_token(player_id=player.id, name=player.name)
+
+    return {"player": player, "token": token}
 
 
 @router.get("/get-info/{session_id}")
