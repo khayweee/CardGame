@@ -27,7 +27,11 @@ RUN poetry config virtualenvs.create false && \
     poetry install --without dev
 
 # Expose the port the app runs on
-EXPOSE 8000
+EXPOSE 443
 
 # Command to run the application
-CMD ["poetry", "run", "uvicorn", "mr_lim_card_game.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["poetry", "run", "uvicorn", "mr_lim_card_game.main:app", \
+    "--host", "0.0.0.0", \
+    "--port", "443", \
+    "--ssl-certfile", "src/certs/cert.pem", \
+    "--ssl-keyfile", "src/certs/key.pem"]

@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import Chat from "@/components/Chat";
 import { ChatMessage } from "@/models/ChatMessage";
-import { jwtDecode } from "jwt-decode"; // Import jwt-decode library
+import { jwtDecode } from "jwt-decode";
+import { getToken } from "@/app/utils/auth";
 
 interface DecodedToken {
     player_id: string;
@@ -17,7 +18,7 @@ const GamePage = () => {
     const searchParams = useSearchParams();
     const sessionId = params?.sessionId;
     const playerId = (params?.playerId as string) || "";
-    const token = searchParams.get("token") as string; // Extract the token from query parameters
+    const token =  getToken();
     const [playerName, setPlayerName] = useState("Unknown Player"); // Initialize playerName state
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [socket, setSocket] = useState<WebSocket | null>(null);
@@ -35,7 +36,7 @@ const GamePage = () => {
 
     useEffect(() => {
         if (sessionId && playerId && token) {
-            const ws = new WebSocket(`ws://localhost:8000/ws/${sessionId}?token=${token}`);
+            const ws = new WebSocket(`wss://localhost:8000/ws/${sessionId}/${playerId}?token=${token}`);
             ws.onopen = () => setSocket(ws);
             ws.onmessage = (event) => {
                 const data = JSON.parse(event.data);

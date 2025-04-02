@@ -8,15 +8,17 @@ logger = Logger.get_logger("mr_lim_card_game")
 router = APIRouter()
 
 
-@router.websocket("/ws/{session_id}")
+@router.websocket("/ws/{session_id}/{player_id}")
 async def websocket_endpoint(
     websocket: WebSocket,
     session_id: str,
+    player_id: str,
     token: str = Query(...),
     game_service: GameService = Depends(get_game_service),
 ):
     # Validate JWT token
-    player_data = validate_token(token)
+    player_data = validate_token(token, player_id)
+    logger.info(f"Token validation result: {player_data}")
     if not player_data:
         logger.warning("Invalid or expired token")
         await websocket.close(code=1008)  # Policy violation
