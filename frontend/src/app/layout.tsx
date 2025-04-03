@@ -1,34 +1,21 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import React from "react";
+import { ConfigProvider } from "antd";
+import theme from "../theme"; // Import the theme configuration
+import "./globals.css"; // Import global CSS if needed
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "Mr Lim Card Game",
-  description: "By Mr Lim",
+export const metadata = {
+  title: "Mr. Lim Card Game",
+  description: "A fun card game application",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <ConfigProvider theme={theme}>
+      <html lang="en">
+        <body>{children}</body> {/* Ensure children includes LandingPage */}
+      </html>
+    </ConfigProvider>
   );
-}
+};
+
+export default RootLayout;

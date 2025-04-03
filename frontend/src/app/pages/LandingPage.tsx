@@ -11,6 +11,7 @@ import {
   Card,
   Space,
   Modal,
+  ConfigProvider,
 } from "antd";
 
 const { Title } = Typography;
@@ -82,7 +83,9 @@ const LandingPage = () => {
         }}
       >
         <Card style={{ width: 400, textAlign: "center" }} bordered={true}>
-          <Title level={2}>Mr. Lim Card Game</Title>
+          <Title level={2} type="primary">
+            Mr. Lim Card Game
+          </Title>
           <Form name="start-game" style={{ maxWidth: 360, margin: "0 auto" }}>
             <Form.Item
               name="name"
