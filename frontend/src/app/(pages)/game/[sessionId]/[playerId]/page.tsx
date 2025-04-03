@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import Chat from "@/components/Chat";
 import { ChatMessage } from "@/models/ChatMessage";
 import { jwtDecode } from "jwt-decode";
@@ -15,7 +15,6 @@ interface DecodedToken {
 
 const GamePage = () => {
     const params = useParams();
-    const searchParams = useSearchParams();
     const sessionId = params?.sessionId;
     const playerId = (params?.playerId as string) || "";
     const token =  getToken();

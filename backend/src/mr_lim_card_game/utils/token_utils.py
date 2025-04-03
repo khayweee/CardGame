@@ -19,9 +19,9 @@ def validate_token(token: str, player_id: str) -> dict:
     """Validate if the token is valid and matches the player_id"""
     try:
         token_data = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        if token_data["player_id"] != player_id:
+        if token_data.get("player_id", None) != player_id:
             return None
-        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return token_data
     except jwt.ExpiredSignatureError:
         # Token has expired
         return None

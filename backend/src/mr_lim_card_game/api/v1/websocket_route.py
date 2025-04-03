@@ -8,7 +8,7 @@ logger = Logger.get_logger("mr_lim_card_game")
 router = APIRouter()
 
 
-@router.websocket("/ws/{session_id}/{player_id}")
+@router.websocket("/{session_id}/{player_id}")
 async def websocket_endpoint(
     websocket: WebSocket,
     session_id: str,

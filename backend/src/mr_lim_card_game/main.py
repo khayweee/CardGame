@@ -22,7 +22,10 @@ app.add_middleware(
 
 # Include routers and ensure they use the singleton GameService instance
 app.include_router(
-    websocket_route.router, tags=["websocket"], dependencies=[Depends(get_game_service)]
+    websocket_route.router,
+    prefix="/ws",
+    tags=["websocket"],
+    dependencies=[Depends(get_game_service)],
 )
 app.include_router(
     game_route.router, prefix="/game", tags=["game"], dependencies=[Depends(get_game_service)]
