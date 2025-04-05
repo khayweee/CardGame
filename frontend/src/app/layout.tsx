@@ -1,6 +1,6 @@
 import React from "react";
 import { ConfigProvider } from "antd";
-import theme from "../theme"; // Import the theme configuration
+import theme from "@/theme"; // Import the theme configuration
 import "./globals.css"; // Import global CSS if needed
 
 export const metadata = {
