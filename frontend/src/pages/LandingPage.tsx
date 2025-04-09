@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { saveToken } from "../utils/auth";
 import { Button, Input, Form, Typography, Card, Space, Modal } from "antd";
-// import { useCustomToken } from "../theme";
+import { useCustomToken } from "../theme";
 
 const { Title } = Typography;
 
@@ -11,8 +11,12 @@ const LandingPage = () => {
   const [sessionId, setSessionId] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
-  // const token = useCustomToken();
+  const token = useCustomToken();
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    document.title = "Landing Page - Mr. Lim's Card Game";
+  }, []);
 
   const handleCreateGame = async () => {
     const createGameResponse = await fetch(
@@ -76,7 +80,7 @@ const LandingPage = () => {
             overflow: "hidden",
           }}
         >
-          <Title level={2}>Mr. Lim Card Game</Title>
+          <Title level={2} style={{ color: token.greenAccent[500] }}>Mr. Lim Card Game</Title>
           <div
             style={{
               overflow: "hidden",
@@ -130,6 +134,21 @@ const LandingPage = () => {
             </Form>
           </div>
         </Card>
+        <Modal
+          title={
+            <span style={{ color: token.redAccent[500] }}>
+              Game Room Not Found
+            </span>
+          }
+          open={isModalVisible}
+          onOk={() => setIsModalVisible(false)}
+          onCancel={() => setIsModalVisible(false)}
+          okText="OK"
+        >
+          <p className="text-primary font-sans" style={{ color: token.redAccent[300] }}>
+            Game room not found. Please check the Game Room and try again.
+          </p>
+        </Modal>
       </div>
     </>
   );

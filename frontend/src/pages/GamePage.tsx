@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
-import Chat from "@/app/components/Chat";
-import { ChatMessage } from "@/models/ChatMessage";
+import { useParams } from "react-router-dom";
+import Chat from "../components/Chat";
+import { ChatMessage } from "../models/ChatMessage";
 import { jwtDecode } from "jwt-decode";
-import { getToken } from "@/app/utils/auth";
+import { getToken } from "../utils/auth";
 import { Row, Col } from "antd";
 
 interface DecodedToken {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { List, Input, Button, Typography } from "antd";
+import { List, Input, Button } from "antd";
 import { SendOutlined } from "@ant-design/icons";
 import { ChatMessage } from "../models/ChatMessage";
 import ChatMessageContainer from "./ChatMessageContainer";

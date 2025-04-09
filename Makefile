@@ -16,8 +16,12 @@ pre_commit_run_backend:
 	cd $(BACKEND_DIR) && poetry run pre-commit run --all-files
 
 # Devops
+build_development:
+	docker-compose -f docker-compose.dev.yml build
+
 start_development:
 	docker-compose -f docker-compose.dev.yml up
+
 
 circleci_local:
 	if ! command -v circleci &> /dev/null; then \

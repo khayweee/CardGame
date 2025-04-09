@@ -7,7 +7,6 @@ import { theme as antdTheme, ThemeConfig } from "antd";
 const customTheme: ThemeConfig = {
   token: {
     colorPrimary: "#1DA57A",
-    colorSecondary: "#868dfb",
     colorBgLayout: "#f7f8fa",
     colorText: "#1F2A40",
     fontFamily: "Source Sans Pro, sans-serif",

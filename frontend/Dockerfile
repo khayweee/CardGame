@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:18.20.8-alpine AS builder
+FROM node:20-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -17,19 +17,13 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Serve
-FROM node:18.20.8-alpine AS runner
-
-# Set working directory
-WORKDIR /app
-
-# Install a lightweight HTTP server
-RUN npm install -g serve
+FROM nginx:1.25.2-alpine AS runner
 
 # Copy the built application from the builder stage
-COPY --from=builder /app/.next ./next
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Expose the port the app runs on
-EXPOSE 3000
+EXPOSE 80
 
-# Command to serve the application
-CMD ["serve", "-s", "next", "-l", "3000"]
+# Command to start Nginx
+CMD ["nginx", "-g", "daemon off;"]
