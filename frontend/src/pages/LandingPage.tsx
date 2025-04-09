@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { saveToken } from "../utils/auth";
 import { Button, Input, Form, Typography, Card, Space, Modal } from "antd";
 import { useCustomToken } from "../theme";
+import { createGameAPI, addPlayerAPI } from "../utils/backend_service";
 
 const { Title } = Typography;
 
@@ -19,41 +20,19 @@ const LandingPage = () => {
   }, []);
 
   const handleCreateGame = async () => {
-    const createGameResponse = await fetch(
-      "https://localhost:8000/game/create-game",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    const data = await createGameResponse.json();
-    const createPlayerResponse = await fetch(
-      "https://localhost:8000/game/add-player",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, session_id: data.session_id }),
-      }
-    );
-    const createPlayerData = await createPlayerResponse.json();
-    saveToken(createPlayerData.token);
-    navigate(`/game/${data.session_id}/${createPlayerData.player.id}`);
+    try {
+      const data = await createGameAPI();
+      const createPlayerData = await addPlayerAPI(name, data.session_id);
+      saveToken(createPlayerData.token);
+      navigate(`/game/${data.session_id}/${createPlayerData.player.id}`);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleJoinGame = async () => {
     try {
-      const createPlayerResponse = await fetch(
-        "https://localhost:8000/game/add-player",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ session_id: sessionId, name }),
-        }
-      );
-      if (!createPlayerResponse.ok) {
-        throw new Error("Game session not found");
-      }
-      const createPlayerData = await createPlayerResponse.json();
+      const createPlayerData = await addPlayerAPI(name, sessionId);
       saveToken(createPlayerData.token);
       navigate(`/game/${sessionId}/${createPlayerData.player.id}`);
     } catch (error) {
